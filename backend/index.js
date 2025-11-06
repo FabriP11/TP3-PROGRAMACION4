@@ -3,6 +3,8 @@ const cors = require("cors");
 require("dotenv").config();
 const { conectarDB } = require("./database");
 
+const vehiculosRoutes = require("./src/routes/vehiculosRoutes");
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -15,6 +17,8 @@ app.get("/", (req, res) => {
     message: "API TP3 funcionando",
   });
 });
+
+app.use("/vehiculos", vehiculosRoutes);
 
 async function startServer() {
   await conectarDB();
