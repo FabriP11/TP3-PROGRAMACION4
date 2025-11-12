@@ -1,9 +1,11 @@
 const {
   obtenerVehiculos,
   crearVehiculo,
+  obtenerVehiculoPorId,
+  actualizarVehiculo,
+  eliminarVehiculo,
 } = require("../models/vehiculoModel");
 
-//GET vehiculos
 async function listarVehiculos(req, res) {
   try {
     const vehiculos = await obtenerVehiculos();
@@ -20,7 +22,6 @@ async function listarVehiculos(req, res) {
   }
 }
 
-//POST vehiculos
 async function crearVehiculoController(req, res) {
   try {
     const { marca, modelo, patente, anio, capacidad_carga } = req.body;
@@ -53,7 +54,94 @@ async function crearVehiculoController(req, res) {
   }
 }
 
+async function obtenerVehiculoController(req, res) {
+  try {
+    const { id } = req.params;
+    const vehiculo = await obtenerVehiculoPorId(id);
+
+    if (!vehiculo) {
+      return res.status(404).json({
+        ok: false,
+        message: "Vehículo no encontrado",
+      });
+    }
+
+    res.json({
+      ok: true,
+      data: vehiculo,
+    });
+  } catch (error) {
+    console.error("Error al obtener vehículo:", error);
+    res.status(500).json({
+      ok: false,
+      message: "Error interno al obtener el vehículo",
+    });
+  }
+}
+
+async function actualizarVehiculoController(req, res) {
+  try {
+    const { id } = req.params;
+    const { marca, modelo, patente, anio, capacidad_carga } = req.body;
+
+    const existente = await obtenerVehiculoPorId(id);
+    if (!existente) {
+      return res.status(404).json({
+        ok: false,
+        message: "Vehículo no encontrado",
+      });
+    }
+
+    const actualizado = await actualizarVehiculo(id, {
+      marca,
+      modelo,
+      patente,
+      anio,
+      capacidad_carga,
+    });
+
+    res.json({
+      ok: true,
+      data: actualizado,
+    });
+  } catch (error) {
+    console.error("Error al actualizar vehículo:", error);
+    res.status(500).json({
+      ok: false,
+      message: "Error interno al actualizar el vehículo",
+    });
+  }
+}
+
+async function eliminarVehiculoController(req, res) {
+  try {
+    const { id } = req.params;
+    const eliminado = await eliminarVehiculo(id);
+
+    if (!eliminado) {
+      return res.status(404).json({
+        ok: false,
+        message: "Vehículo no encontrado",
+      });
+    }
+
+    res.json({
+      ok: true,
+      message: "Vehículo eliminado correctamente",
+    });
+  } catch (error) {
+    console.error("Error al eliminar vehículo:", error);
+    res.status(500).json({
+      ok: false,
+      message: "Error interno al eliminar el vehículo",
+    });
+  }
+}
+
 module.exports = {
   listarVehiculos,
   crearVehiculoController,
+  obtenerVehiculoController,
+  actualizarVehiculoController,
+  eliminarVehiculoController,
 };

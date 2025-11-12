@@ -1,0 +1,43 @@
+### Listar todos los vehículos
+GET http://localhost:3000/vehiculos
+Content-Type: application/json
+
+###
+
+### Obtener un vehículo por id
+GET http://localhost:3000/vehiculos/1
+Content-Type: application/json
+
+###
+
+### Crear un vehículo
+POST http://localhost:3000/vehiculos
+Content-Type: application/json
+
+{
+  "marca": "Ford",
+  "modelo": "Transit",
+  "patente": "ABC123",
+  "anio": 2020,
+  "capacidad_carga": 1500.5
+}
+
+###
+
+### Actualizar un vehículo
+PUT http://localhost:3000/vehiculos/1
+Content-Type: application/json
+
+{
+  "marca": "Fiat",
+  "modelo": "Ducato",
+  "patente": "XYZ987",
+  "anio": 2021,
+  "capacidad_carga": 1800
+}
+
+###
+
+### Eliminar un vehículo
+DELETE http://localhost:3000/vehiculos/1
+Content-Type: application/json
