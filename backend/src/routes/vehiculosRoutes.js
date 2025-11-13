@@ -7,21 +7,29 @@ const {
   eliminarVehiculoController,
 } = require("../controllers/vehiculosController");
 
+const {
+  validarCrearVehiculo,
+  validarActualizarVehiculo,
+  validarIdVehiculo,
+} = require("../middlewares/vehiculosValidations");
+
+const validarCampos = require("../middlewares/validarCampos");
+
 const router = express.Router();
 
-//GET vehiculos
+//GET /vehiculos
 router.get("/", listarVehiculos);
 
 //GET /vehiculos  id
-router.get("/:id", obtenerVehiculoController);
+router.get("/:id", validarIdVehiculo, validarCampos, obtenerVehiculoController);
 
-//POST vehiculos
-router.post("/", crearVehiculoController);
+//POST /vehiculos
+router.post("/",  validarCrearVehiculo, validarCampos, crearVehiculoController);
 
 //PUT /vehiculos  id
-router.put("/:id", actualizarVehiculoController);
+router.put("/:id", validarActualizarVehiculo, validarCampos, actualizarVehiculoController);
 
 //DELETE /vehiculos  id
-router.delete("/:id", eliminarVehiculoController);
+router.delete("/:id", validarIdVehiculo, validarCampos, eliminarVehiculoController);
 
 module.exports = router;
