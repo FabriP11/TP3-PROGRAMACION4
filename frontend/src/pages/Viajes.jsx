@@ -6,11 +6,9 @@ function Viajes() {
   const [viajes, setViajes] = useState([]);
   const [error, setError] = useState("");
 
-  // Para futuros combos (opcional)
   const [vehiculos, setVehiculos] = useState([]);
   const [conductores, setConductores] = useState([]);
 
-  // Form
   const [vehiculoId, setVehiculoId] = useState("");
   const [conductorId, setConductorId] = useState("");
   const [fechaSalida, setFechaSalida] = useState("");
