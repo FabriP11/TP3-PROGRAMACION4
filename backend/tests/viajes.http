@@ -1,11 +1,13 @@
 ### Listar viajes
 GET http://localhost:3000/viajes
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJmYWJyaWNpb3BvbmNlMjAxMkBnbWFpbC5jb20iLCJub21icmUiOiJGYWJyaSIsImlhdCI6MTc2Mjk5NDEzMywiZXhwIjoxNzYzMDA4NTMzfQ.k7IwXewsyNAtPR4KWYvTvdyL0zfOlPUfxB4GSC-Ppyo
 Content-Type: application/json
 
 ###
 
 ### Crear viaje
 POST http://localhost:3000/viajes
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJmYWJyaWNpb3BvbmNlMjAxMkBnbWFpbC5jb20iLCJub21icmUiOiJGYWJyaSIsImlhdCI6MTc2Mjk5NDEzMywiZXhwIjoxNzYzMDA4NTMzfQ.k7IwXewsyNAtPR4KWYvTvdyL0zfOlPUfxB4GSC-Ppyo
 Content-Type: application/json
 
 {
