@@ -4,6 +4,8 @@ require("dotenv").config();
 const { conectarDB } = require("./database");
 
 const vehiculosRoutes = require("./src/routes/vehiculosRoutes");
+const conductoresRoutes = require("./src/routes/conductoresRoutes");
+const viajesRoutes = require("./src/routes/viajesRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -19,6 +21,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/vehiculos", vehiculosRoutes);
+app.use("/conductores", conductoresRoutes);
+app.use("/viajes", viajesRoutes);
 
 async function startServer() {
   await conectarDB();
