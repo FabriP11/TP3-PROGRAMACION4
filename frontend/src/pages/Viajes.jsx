@@ -1,14 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "../context/useAuth";
 
 function Viajes() {
   const { token } = useAuth();
-  const [viajes, setViajes] = useState([]);
-  const [error, setError] = useState("");
 
+  const [viajes, setViajes] = useState([]);
   const [vehiculos, setVehiculos] = useState([]);
   const [conductores, setConductores] = useState([]);
+  const [error, setError] = useState("");
 
+  // Filtros
+  const [filtroVehiculo, setFiltroVehiculo] = useState("");
+  const [filtroConductor, setFiltroConductor] = useState("");
+
+  // Formulario
   const [vehiculoId, setVehiculoId] = useState("");
   const [conductorId, setConductorId] = useState("");
   const [fechaSalida, setFechaSalida] = useState("");
@@ -26,12 +31,11 @@ function Viajes() {
           Authorization: `Bearer ${token}`,
         },
       });
-
       const data = await resp.json();
-      if (!resp.ok || !data.ok) throw new Error(data.message);
-
+      if (!resp.ok || !data.ok) throw new Error(data.message || "Error al obtener viajes");
       setViajes(data.data);
     } catch (err) {
+      console.error(err);
       setError(err.message);
     }
   }
@@ -62,6 +66,7 @@ function Viajes() {
       setVehiculos(dataV.data);
       setConductores(dataC.data);
     } catch (err) {
+      console.error(err);
       setError(err.message);
     }
   }
@@ -73,7 +78,7 @@ function Viajes() {
     }
   }, [token]);
 
-  async function handleCrear(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     setError("");
 
@@ -97,7 +102,7 @@ function Viajes() {
       });
 
       const data = await resp.json();
-      if (!resp.ok || !data.ok) throw new Error(data.message);
+      if (!resp.ok || !data.ok) throw new Error(data.message || "Error al crear viaje");
 
       await cargarViajes();
 
@@ -110,9 +115,24 @@ function Viajes() {
       setKm("");
       setObs("");
     } catch (err) {
+      console.error(err);
       setError(err.message);
     }
   }
+
+  // Viajes filtrados por vehículo / conductor
+  const viajesFiltrados = useMemo(() => {
+    return viajes.filter((v) => {
+      if (filtroVehiculo && v.vehiculo_id !== Number(filtroVehiculo)) return false;
+      if (filtroConductor && v.conductor_id !== Number(filtroConductor)) return false;
+      return true;
+    });
+  }, [viajes, filtroVehiculo, filtroConductor]);
+
+  // Total de km según filtro
+  const totalKm = useMemo(() => {
+    return viajesFiltrados.reduce((acc, v) => acc + Number(v.kilometros || 0), 0);
+  }, [viajesFiltrados]);
 
   return (
     <div>
@@ -120,7 +140,7 @@ function Viajes() {
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       <h3>Crear viaje</h3>
-      <form onSubmit={handleCrear} style={{ marginBottom: "20px" }}>
+      <form onSubmit={handleSubmit} style={{ marginBottom: "20px" }}>
         <div>
           <label>Vehículo</label>
           <select
@@ -212,8 +232,41 @@ function Viajes() {
         <button type="submit">Crear viaje</button>
       </form>
 
-      {viajes.length === 0 ? (
-        <p>No hay viajes cargados.</p>
+      <h3>Filtros de historial</h3>
+      <div style={{ marginBottom: "10px" }}>
+        <label>Por vehículo: </label>
+        <select
+          value={filtroVehiculo}
+          onChange={(e) => setFiltroVehiculo(e.target.value)}
+        >
+          <option value="">Todos</option>
+          {vehiculos.map((v) => (
+            <option key={v.id} value={v.id}>
+              {v.id} - {v.marca} {v.modelo} ({v.patente})
+            </option>
+          ))}
+        </select>
+
+        <label style={{ marginLeft: "15px" }}>Por conductor: </label>
+        <select
+          value={filtroConductor}
+          onChange={(e) => setFiltroConductor(e.target.value)}
+        >
+          <option value="">Todos</option>
+          {conductores.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.id} - {c.nombre} {c.apellido}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <p>
+        <strong>Total de kilómetros (según filtros):</strong> {totalKm}
+      </p>
+
+      {viajesFiltrados.length === 0 ? (
+        <p>No hay viajes para los filtros seleccionados.</p>
       ) : (
         <table border="1" cellPadding="4">
           <thead>
@@ -225,12 +278,12 @@ function Viajes() {
               <th>Llegada</th>
               <th>Origen</th>
               <th>Destino</th>
-              <th>Kms</th>
+              <th>Km</th>
               <th>Obs</th>
             </tr>
           </thead>
           <tbody>
-            {viajes.map((v) => (
+            {viajesFiltrados.map((v) => (
               <tr key={v.id}>
                 <td>{v.id}</td>
                 <td>{v.vehiculo_id}</td>
