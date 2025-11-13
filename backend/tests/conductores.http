@@ -1,0 +1,17 @@
+### Listar conductores
+GET http://localhost:3000/conductores
+Content-Type: application/json
+
+###
+
+### Crear conductor
+POST http://localhost:3000/conductores
+Content-Type: application/json
+
+{
+  "nombre": "Marcos",
+  "apellido": "Castro",
+  "dni": "39783713",
+  "licencia": "B1",
+  "fecha_vencimiento_licencia": "2028-05-01"
+}

@@ -1,0 +1,20 @@
+### Listar viajes
+GET http://localhost:3000/viajes
+Content-Type: application/json
+
+###
+
+### Crear viaje
+POST http://localhost:3000/viajes
+Content-Type: application/json
+
+{
+  "vehiculo_id": 1,
+  "conductor_id": 1,
+  "fecha_salida": "2025-11-12 08:00:00",
+  "fecha_llegada": "2025-11-12 12:00:00",
+  "origen": "La Rioja",
+  "destino": "Córdoba",
+  "kilometros": 430,
+  "observaciones": "Viaje de prueba"
+}
