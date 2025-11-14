@@ -1,42 +1,226 @@
-#root {
-  max-width: 1280px;
+body {
+  margin: 0;
+  padding: 0;
+  background: #111;
+  color: #e5e5e5;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+.app-root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+nav {
+  background: #151515;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #333;
+}
+
+nav a {
+  color: #9bb8ff;
+  margin-right: 18px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 15px;
+}
+
+nav a:hover {
+  color: #d7e2ff;
+}
+
+nav span {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+nav span button {
+  background: #252525;
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+nav span button:hover {
+  background: #383838;
+}
+
+.content {
+  max-width: 1000px;
+  width: 100%;
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  padding: 24px 20px 40px;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.page h2 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 26px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+.page h3 {
+  margin-top: 24px;
+  margin-bottom: 12px;
+  font-size: 20px;
+}
+
+.auth-card {
+  max-width: 380px;
+  margin: 40px auto 0;
+  background: #191919;
+  padding: 24px;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #191919;
+  padding: 18px 20px;
+  border-radius: 12px;
+  margin-bottom: 22px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+}
+
+form label {
+  font-size: 13px;
+  margin-bottom: 3px;
+}
+
+form input,
+form select,
+form textarea {
+  background: #262626;
+  border: 1px solid #3b3b3b;
+  color: #fff;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+form input:focus,
+form select:focus,
+form textarea:focus {
+  outline: none;
+  border-color: #4d8dff;
+  box-shadow: 0 0 0 1px #4d8dff40;
+}
+
+form textarea {
+  min-height: 60px;
+  resize: vertical;
+}
+
+form button[type="submit"] {
+  align-self: flex-start;
+  margin-top: 4px;
+}
+
+.btn,
+button {
+  cursor: pointer;
+  padding: 7px 14px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  transition: background 0.15s ease, transform 0.05s ease;
+}
+
+form button,
+.btn-primary {
+  background: #0066ff;
+  color: #fff;
+}
+
+form button:hover,
+.btn-primary:hover {
+  background: #0052d1;
+}
+
+.btn-edit {
+  background: #ffc107;
+  color: #222;
+}
+
+.btn-edit:hover {
+  background: #e0a800;
+}
+
+.btn-delete {
+  background: #dc3545;
+  color: #fff;
+}
+
+.btn-delete:hover {
+  background: #c82333;
+}
+
+button:active,
+.btn:active {
+  transform: scale(0.97);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 14px;
+  background: #171717;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+table th {
+  background: #202020;
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #333;
+  font-size: 14px;
+}
+
+table td {
+  padding: 9px 10px;
+  border-bottom: 1px solid #252525;
+  font-size: 14px;
+}
+
+table tr:nth-child(even) {
+  background: #141414;
+}
+
+table tr:last-child td {
+  border-bottom: none;
+}
+
+p {
+  margin: 6px 0;
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding: 16px 12px 32px;
   }
-  to {
-    transform: rotate(360deg);
+
+  form {
+    padding: 14px 12px;
   }
-}
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+  nav {
+    flex-wrap: wrap;
+    gap: 8px;
   }
-}
 
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+  nav span {
+    width: 100%;
+    justify-content: flex-end;
+  }
 }

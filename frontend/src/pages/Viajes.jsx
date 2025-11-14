@@ -9,11 +9,11 @@ function Viajes() {
   const [conductores, setConductores] = useState([]);
   const [error, setError] = useState("");
 
-  // Filtros
+  //Filtros
   const [filtroVehiculo, setFiltroVehiculo] = useState("");
   const [filtroConductor, setFiltroConductor] = useState("");
 
-  // Formulario
+  //Form
   const [vehiculoId, setVehiculoId] = useState("");
   const [conductorId, setConductorId] = useState("");
   const [fechaSalida, setFechaSalida] = useState("");
@@ -23,6 +23,7 @@ function Viajes() {
   const [km, setKm] = useState("");
   const [obs, setObs] = useState("");
 
+  //Carga de datos
   async function cargarViajes() {
     try {
       const resp = await fetch("http://localhost:3000/viajes", {
@@ -31,11 +32,12 @@ function Viajes() {
           Authorization: `Bearer ${token}`,
         },
       });
+
       const data = await resp.json();
-      if (!resp.ok || !data.ok) throw new Error(data.message || "Error al obtener viajes");
+      if (!resp.ok || !data.ok) throw new Error(data.message);
+
       setViajes(data.data);
     } catch (err) {
-      console.error(err);
       setError(err.message);
     }
   }
@@ -44,16 +46,10 @@ function Viajes() {
     try {
       const [respV, respC] = await Promise.all([
         fetch("http://localhost:3000/vehiculos", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         }),
         fetch("http://localhost:3000/conductores", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         }),
       ]);
 
@@ -66,7 +62,6 @@ function Viajes() {
       setVehiculos(dataV.data);
       setConductores(dataC.data);
     } catch (err) {
-      console.error(err);
       setError(err.message);
     }
   }
@@ -78,6 +73,7 @@ function Viajes() {
     }
   }, [token]);
 
+  //Crear viaje
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
@@ -102,7 +98,7 @@ function Viajes() {
       });
 
       const data = await resp.json();
-      if (!resp.ok || !data.ok) throw new Error(data.message || "Error al crear viaje");
+      if (!resp.ok || !data.ok) throw new Error(data.message);
 
       await cargarViajes();
 
@@ -115,12 +111,11 @@ function Viajes() {
       setKm("");
       setObs("");
     } catch (err) {
-      console.error(err);
       setError(err.message);
     }
   }
 
-  // Viajes filtrados por vehículo / conductor
+  //Filtros
   const viajesFiltrados = useMemo(() => {
     return viajes.filter((v) => {
       if (filtroVehiculo && v.vehiculo_id !== Number(filtroVehiculo)) return false;
@@ -129,19 +124,21 @@ function Viajes() {
     });
   }, [viajes, filtroVehiculo, filtroConductor]);
 
-  // Total de km según filtro
   const totalKm = useMemo(() => {
     return viajesFiltrados.reduce((acc, v) => acc + Number(v.kilometros || 0), 0);
   }, [viajesFiltrados]);
 
   return (
-    <div>
-      <h2>Viajes</h2>
+    <div className="page page-centered">
+      <div className="page-header">
+        <h2>Viajes</h2>
+        <h3>Crear Viaje</h3>
+      </div>
+
       {error && <p style={{ color: "red" }}>{error}</p>}
 
-      <h3>Crear viaje</h3>
-      <form onSubmit={handleSubmit} style={{ marginBottom: "20px" }}>
-        <div>
+      <div className="form-card">
+        <form onSubmit={handleSubmit}>
           <label>Vehículo</label>
           <select
             value={vehiculoId}
@@ -155,9 +152,7 @@ function Viajes() {
               </option>
             ))}
           </select>
-        </div>
 
-        <div>
           <label>Conductor</label>
           <select
             value={conductorId}
@@ -171,47 +166,37 @@ function Viajes() {
               </option>
             ))}
           </select>
-        </div>
 
-        <div>
-          <label>Fecha salida</label>
+          <label>Fecha de salida</label>
           <input
             type="datetime-local"
             value={fechaSalida}
             onChange={(e) => setFechaSalida(e.target.value)}
             required
           />
-        </div>
 
-        <div>
-          <label>Fecha llegada</label>
+          <label>Fecha de llegada</label>
           <input
             type="datetime-local"
             value={fechaLlegada}
             onChange={(e) => setFechaLlegada(e.target.value)}
             required
           />
-        </div>
 
-        <div>
           <label>Origen</label>
           <input
             value={origen}
             onChange={(e) => setOrigen(e.target.value)}
             required
           />
-        </div>
 
-        <div>
           <label>Destino</label>
           <input
             value={destino}
             onChange={(e) => setDestino(e.target.value)}
             required
           />
-        </div>
 
-        <div>
           <label>Kilómetros</label>
           <input
             type="number"
@@ -219,85 +204,91 @@ function Viajes() {
             onChange={(e) => setKm(e.target.value)}
             required
           />
+
+          <label>Observaciones</label>
+          <textarea value={obs} onChange={(e) => setObs(e.target.value)} />
+
+          <div className="form-actions">
+            <button type="submit">Crear Viaje</button>
+          </div>
+        </form>
+      </div>
+
+      <div className="page-header" style={{ marginTop: "25px" }}>
+        <h3>Filtros de Historial</h3>
+      </div>
+
+      <div className="filter-panel">
+        <div>
+          <label>Por Vehículo:</label>
+          <select
+            value={filtroVehiculo}
+            onChange={(e) => setFiltroVehiculo(e.target.value)}
+          >
+            <option value="">Todos</option>
+            {vehiculos.map((v) => (
+              <option key={v.id} value={v.id}>
+                {v.id} - {v.marca} {v.modelo}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div>
-          <label>Observaciones</label>
-          <textarea
-            value={obs}
-            onChange={(e) => setObs(e.target.value)}
-          />
+          <label>Por Conductor:</label>
+          <select
+            value={filtroConductor}
+            onChange={(e) => setFiltroConductor(e.target.value)}
+          >
+            <option value="">Todos</option>
+            {conductores.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.nombre} {c.apellido}
+              </option>
+            ))}
+          </select>
         </div>
-
-        <button type="submit">Crear viaje</button>
-      </form>
-
-      <h3>Filtros de historial</h3>
-      <div style={{ marginBottom: "10px" }}>
-        <label>Por vehículo: </label>
-        <select
-          value={filtroVehiculo}
-          onChange={(e) => setFiltroVehiculo(e.target.value)}
-        >
-          <option value="">Todos</option>
-          {vehiculos.map((v) => (
-            <option key={v.id} value={v.id}>
-              {v.id} - {v.marca} {v.modelo} ({v.patente})
-            </option>
-          ))}
-        </select>
-
-        <label style={{ marginLeft: "15px" }}>Por conductor: </label>
-        <select
-          value={filtroConductor}
-          onChange={(e) => setFiltroConductor(e.target.value)}
-        >
-          <option value="">Todos</option>
-          {conductores.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.id} - {c.nombre} {c.apellido}
-            </option>
-          ))}
-        </select>
       </div>
 
       <p>
-        <strong>Total de kilómetros (según filtros):</strong> {totalKm}
+        <strong>Total de Kilómetros (según filtros):</strong> {totalKm}
       </p>
 
       {viajesFiltrados.length === 0 ? (
         <p>No hay viajes para los filtros seleccionados.</p>
       ) : (
-        <table border="1" cellPadding="4">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Vehículo</th>
-              <th>Conductor</th>
-              <th>Salida</th>
-              <th>Llegada</th>
-              <th>Origen</th>
-              <th>Destino</th>
-              <th>Km</th>
-              <th>Obs</th>
-            </tr>
-          </thead>
-          <tbody>
-            {viajesFiltrados.map((v) => (
-              <tr key={v.id}>
-                <td>{v.id}</td>
-                <td>{v.vehiculo_id}</td>
-                <td>{v.conductor_id}</td>
-                <td>{v.fecha_salida}</td>
-                <td>{v.fecha_llegada}</td>
-                <td>{v.origen}</td>
-                <td>{v.destino}</td>
-                <td>{v.kilometros}</td>
-                <td>{v.observaciones}</td>
+        <div className="table-card">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Vehículo</th>
+                <th>Conductor</th>
+                <th>Salida</th>
+                <th>Llegada</th>
+                <th>Origen</th>
+                <th>Destino</th>
+                <th>Km</th>
+                <th>Comentarios</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {viajesFiltrados.map((v) => (
+                <tr key={v.id}>
+                  <td>{v.id}</td>
+                  <td>{v.vehiculo_id}</td>
+                  <td>{v.conductor_id}</td>
+                  <td>{v.fecha_salida}</td>
+                  <td>{v.fecha_llegada}</td>
+                  <td>{v.origen}</td>
+                  <td>{v.destino}</td>
+                  <td>{v.kilometros}</td>
+                  <td>{v.observaciones}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

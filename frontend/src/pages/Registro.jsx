@@ -25,15 +25,10 @@ function Registro() {
       });
 
       const data = await resp.json();
+      if (!resp.ok || !data.ok) throw new Error(data.message);
 
-      if (!resp.ok || !data.ok) {
-        throw new Error(data.message || "Error al registrar usuario");
-      }
-
-      setMensaje("Usuario registrado correctamente. Ahora podés iniciar sesión.");
-      setTimeout(() => {
-        navigate("/login");
-      }, 1500);
+      setMensaje("Usuario registrado correctamente.");
+      setTimeout(() => navigate("/login"), 1500);
     } catch (err) {
       console.error(err);
       setError(err.message);
@@ -43,46 +38,78 @@ function Registro() {
   }
 
   return (
-    <div>
-      <h2>Registro</h2>
-      <form onSubmit={handleSubmit} style={{ maxWidth: "300px" }}>
-        <div>
-          <label>Nombre</label>
-          <input
-            type="text"
-            value={nombre}
-            onChange={(e) => setNombre(e.target.value)}
-            required
-          />
+    <div className="page">
+      <header className="page-header">
+        <h2>Registro</h2>
+      </header>
+
+      <main className="page-content">
+        <div className="card" style={{ maxWidth: "480px", margin: "0 auto" }}>
+          
+          <div className="card-header" style={{ textAlign: "center" }}>
+            <h3 className="card-title">Crear Nueva Cuenta</h3>
+          </div>
+
+          <div className="card-body">
+            {error && <p className="error-text">{error}</p>}
+            {mensaje && <p className="success-text">{mensaje}</p>}
+
+            <form
+              onSubmit={handleSubmit}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                width: "100%"
+              }}
+            >
+              
+              <div style={{ width: "80%", marginBottom: "15px" }}>
+                <label>Nombre</label>
+                <input
+                  type="text"
+                  placeholder="Tu nombre"
+                  value={nombre}
+                  onChange={(e) => setNombre(e.target.value)}
+                  required
+                  style={{ width: "100%" }}
+                />
+              </div>
+
+              <div style={{ width: "80%", marginBottom: "15px" }}>
+                <label>Email</label>
+                <input
+                  type="email"
+                  placeholder="tu@correo.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  style={{ width: "100%" }}
+                />
+              </div>
+
+              <div style={{ width: "80%", marginBottom: "15px" }}>
+                <label>Contraseña</label>
+                <input
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  style={{ width: "100%" }}
+                />
+              </div>
+
+              <div style={{ textAlign: "center" }}>
+                <button className="btn btn-primary" type="submit">
+                  {cargando ? "Registrando..." : "Registrarme"}
+                </button>
+              </div>
+
+            </form>
+          </div>
         </div>
-
-        <div>
-          <label>Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-
-        <div>
-          <label>Contraseña</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        {mensaje && <p style={{ color: "green" }}>{mensaje}</p>}
-
-        <button type="submit" disabled={cargando}>
-          {cargando ? "Registrando..." : "Registrarme"}
-        </button>
-      </form>
+      </main>
     </div>
   );
 }
