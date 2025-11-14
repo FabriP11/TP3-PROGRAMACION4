@@ -162,7 +162,6 @@ function Vehiculos() {
             required
           />
 
-          {/* ACCIONES CENTRADAS */}
           <div className="form-actions">
             <button type="submit">
               {editandoId ? "Guardar cambios" : "Crear"}
