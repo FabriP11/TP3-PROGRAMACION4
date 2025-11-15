@@ -14,8 +14,10 @@ const {
 } = require("../middlewares/viajesValidations");
 
 const validarCampos = require("../middlewares/validarCampos");
+const { protegerRuta } = require("../middlewares/authMiddleware");
 
 const router = express.Router();
+router.use(protegerRuta);
 
 //GET /viajes
 router.get("/", listarViajes);

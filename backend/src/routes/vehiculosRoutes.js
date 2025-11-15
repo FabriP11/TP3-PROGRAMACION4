@@ -14,8 +14,10 @@ const {
 } = require("../middlewares/vehiculosValidations");
 
 const validarCampos = require("../middlewares/validarCampos");
+const { protegerRuta } = require("../middlewares/authMiddleware");
 
 const router = express.Router();
+router.use(protegerRuta);
 
 //GET /vehiculos
 router.get("/", listarVehiculos);
