@@ -27,9 +27,9 @@ app.get("/", (req, res) => {
 
 app.use("/auth", authRoutes);
 
-app.use("/vehiculos", vehiculosRoutes);
-app.use("/conductores", conductoresRoutes);
-app.use("/viajes", viajesRoutes);
+app.use("/vehiculos", protegerRuta, vehiculosRoutes);
+app.use("/conductores", protegerRuta, conductoresRoutes);
+app.use("/viajes", protegerRuta, viajesRoutes);
 
 async function startServer() {
   await conectarDB();
